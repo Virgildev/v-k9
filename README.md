@@ -16,7 +16,7 @@ This is a custom script for FiveM, designed to integrate K9 functionality for po
 
 # Preview
 
-- (Watch Here)[https://streamable.com/dud0we]
+- [Watch Here](https://streamable.com/dud0we)
 
 ## Requirements
 
