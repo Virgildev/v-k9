@@ -7,12 +7,16 @@ This is a custom script for FiveM, designed to integrate K9 functionality for po
 - **K9 Mode Activation**: Police officers can activate the K9 mode with a simple command.
 - **K9 Menu**: Access a menu with various options for K9-related actions, such as:
   - **Enter/Exit Vehicle**: Command the K9 to enter or exit a vehicle.
-  - **Search Player**: Order the K9 to search a player for contraband.
-  - **Search Vehicle**: Command the K9 to search a nearby vehicle.
+  - **Search Player**: Order the K9 to search a player for contraband, with chance for each item.
+  - **Search Vehicle**: Command the K9 to search a nearby vehicle, with chance for each item.
   - **K9 Sounds**: Play different sound effects based on the K9's breed (small or large).
 - **K9 Emotes**: Trigger emotes for small and large dogs during actions such as searching or barking.
 - **K9 Sound Effects**: Play sound effects associated with the K9's actions.
 - **Supports Multiple Dog Breeds**: The script supports both small and large dog breeds, with different sounds and emotes for each.
+
+# Preview
+
+- (Watch Here)[https://streamable.com/dud0we]
 
 ## Requirements
 
