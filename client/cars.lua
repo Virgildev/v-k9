@@ -7,11 +7,8 @@ RegisterNetEvent('police-k9:enterExitVehicle', function()
     TaskClearLookAt(ped)
     if DoesEntityExist(vehicle) then
         TaskLeaveVehicle(ped, vehicle, 0)
-
         Citizen.Wait(1000)
-
         exports["rpemotes-reborn"]:EmoteCancel()
-
     else
         local closestVehicle = QBCore.Functions.GetClosestVehicle()
         if DoesEntityExist(closestVehicle) then
@@ -30,13 +27,13 @@ RegisterNetEvent('police-k9:enterExitVehicle', function()
                 end
             else
                 TriggerEvent('ox_lib:notify', {
-                    description = 'No nearby vehicle found within 3 meters.',
+                    description = Config.Lang['no_vehicles_nearby'],
                     type = 'error'
                 })
             end
         else
             TriggerEvent('ox_lib:notify', {
-                description = 'No nearby vehicle found.',
+                description = Config.Lang['no_vehicles_nearby'],
                 type = 'error'
             })
         end

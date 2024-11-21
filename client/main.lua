@@ -1,18 +1,16 @@
 QBCore = exports['qb-core']:GetCoreObject()
 
-local isActive = false
-
 RegisterNetEvent('police-k9:activate', function()
     local ped = PlayerPedId()
     if IsPedInAnyVehicle(ped, false) then
         TriggerEvent('ox_lib:notify', {
-            description = 'You cannot activate the K9 from inside a vehicle.',
+            description = Config.Lang['vehicle_restriction'],
             type = 'error'
         })
         return
     end
     TriggerEvent('ox_lib:notify', {
-        description = 'K9 mode activated. Use /k9menu to access features.',
+        description = Config.Lang['k9_mode_activated'],
         type = 'success'
     })
     isActive = true
@@ -46,7 +44,7 @@ RegisterNetEvent('police-k9:menu', function()
         for _, soundData in ipairs(Config.SmallDogSounds) do
             table.insert(soundOptions, {
                 title = soundData.label,
-                description = 'Play the sound: ' .. soundData.sound,
+                description = Config.Lang['play_sound'] .. soundData.sound,
                 icon = 'fa-volume-up',
                 event = 'police-k9:playSound',
                 args = soundData
@@ -56,7 +54,7 @@ RegisterNetEvent('police-k9:menu', function()
         for _, soundData in ipairs(Config.LargeDogSounds) do
             table.insert(soundOptions, {
                 title = soundData.label,
-                description = 'Play the sound: ' .. soundData.sound,
+                description = Config.Lang['play_sound'] .. soundData.sound,
                 icon = 'fa-volume-up',
                 event = 'police-k9:playSound',
                 args = soundData
@@ -73,25 +71,25 @@ RegisterNetEvent('police-k9:menu', function()
     local options = {
         {
             title = 'Enter/Exit Vehicle',
-            description = 'Command the K9 to enter or exit a nearby vehicle.',
+            description = Config.Lang['enter_exit_vehicle'],
             icon = 'fa-car-side',
             event = 'police-k9:enterExitVehicle'
         },
         {
             title = 'Search Player',
-            description = 'Order the K9 to search the closest player for contraband.',
+            description = Config.Lang['search_player'],
             icon = 'fa-solid fa-magnifying-glass',
             event = 'police-k9:searchPlayer'
         },
         {
             title = 'Search Vehicle',
-            description = 'Command the K9 to search a nearby vehicle.',
+            description = Config.Lang['search_vehicle'],
             icon = 'fa-car',
             event = 'police-k9:client:searchVehicle'
         },
         {
             title = 'Sounds',
-            description = 'Access various K9 sound effects.',
+            description = Config.Lang['access_sounds'],
             icon = 'fa-dog',
             menu = 'police_k9_sounds'
         },
@@ -152,7 +150,7 @@ RegisterNetEvent('police-k9:searchPlayer', function()
         
         local result = lib.progressCircle({
             duration = 5000,
-            label = 'K9 Searching Player...',
+            label = Config.Lang['searching_player'],
             canCancel = true,
             position = 'bottom'
         })
@@ -162,7 +160,7 @@ RegisterNetEvent('police-k9:searchPlayer', function()
         TriggerServerEvent('police-k9:searchInventory', target)
     else
         TriggerEvent('ox_lib:notify', {
-            description = 'No players nearby.',
+            description = Config.Lang['no_players_nearby'],
             type = 'error'
         })
     end
@@ -184,7 +182,7 @@ RegisterNetEvent('police-k9:client:searchVehicle', function()
 
         local result = lib.progressCircle({
             duration = 5000,
-            label = 'K9 Searching Vehicle...',
+            label = Config.Lang['searching_vehicle'],
             canCancel = true,
             position = 'bottom'
         })
@@ -193,7 +191,7 @@ RegisterNetEvent('police-k9:client:searchVehicle', function()
         TriggerServerEvent('police-k9:server:searchVehicle', vehiclePlate, vehicleCoords)
     else
         TriggerEvent('ox_lib:notify', {
-            description = 'No vehicles nearby.',
+            description = Config.Lang['no_vehicles_nearby'],
             type = 'error'
         })
     end

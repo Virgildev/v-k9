@@ -2,7 +2,7 @@ fx_version 'cerulean'
 game 'gta5'
 
 author 'Virgil big thug straight out da opps block type shit'
-description 'Put the phone down, THIS IS FOR MY SAFETY'
+description 'Put the phone down'
 version '1.0.0'
 lua54 'yes'
 

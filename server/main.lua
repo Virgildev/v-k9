@@ -1,6 +1,6 @@
 QBCore = exports['qb-core']:GetCoreObject()
 
-local discordWebhookURL = 'https://discord.com/api/webhooks/1308963002669858856/1ZpG1WvYg53hOnH2xnIytJ8x4XlWaaBaKwXOLnkODVP9Onb_2cWIHJTIeraGcBU86n2W' -- Replace with your Discord webhook URL
+local discordWebhookURL = '' -- Put your discord webhook
 
 local function isDogPed(ped)
     local model = GetEntityModel(ped)
@@ -20,7 +20,7 @@ local function isDogPed(ped)
     return false
 end
 
-QBCore.Commands.Add('k9activate', 'Activate K9 mode.', {}, false, function(source, args)
+QBCore.Commands.Add(Config.k9ActivateCommand, Config.Lang['k9_mode_activated'], {}, false, function(source, args)
     local discordID = ""
     local playerName = ""
     local Player = QBCore.Functions.GetPlayer(source)
@@ -44,11 +44,11 @@ QBCore.Commands.Add('k9activate', 'Activate K9 mode.', {}, false, function(sourc
         TriggerClientEvent('police-k9:activate', source)
 
         local message = {
-            content = "**K9 Mode Activated**",
+            content = Config.Lang['k9_mode_activated'],
             embeds = {
                 {
-                    title = "K9 Mode Activation",
-                    description = "**Player**: <@" .. discordID .. ">\n**Name**: " .. playerName .. "\n**Action**: Clocked in and activated K9 mode.",
+                    title = Config.Lang['k9_mode_activated'],
+                    description = Config.Lang['k9_mode_activated'] .. ": <@" .. discordID .. ">\n**Name**: " .. playerName .. "\n**Action**: Clocked in and activated K9 mode.",
                     color = 3066993,
                     timestamp = os.date("!%Y-%m-%dT%H:%M:%S"),
                 }
@@ -62,22 +62,22 @@ QBCore.Commands.Add('k9activate', 'Activate K9 mode.', {}, false, function(sourc
         end, 'POST', json.encode(message), { ['Content-Type'] = 'application/json' })
     else
         TriggerClientEvent('ox_lib:notify', source, {
-            title = 'Access Denied',
-            description = 'You must be a police or K9 officer and have a valid dog ped to use this command.',
+            title = Config.Lang['access_denied'],
+            description = Config.Lang['k9_no_valid_role'],
             type = 'error',
         })
     end
 end)
 
-QBCore.Commands.Add('k9menu', 'Open K9 menu.', {}, false, function(source, args)
+QBCore.Commands.Add(Config.k9MenuCommand, Config.Lang['k9_menu'], {}, false, function(source, args)
     local Player = QBCore.Functions.GetPlayer(source)
 
     if Player and table.contains(Config.PoliceJobs, Player.PlayerData.job.name) then
         TriggerClientEvent('police-k9:menu', source)
     else
         TriggerClientEvent('ox_lib:notify', source, {
-            title = 'Access Denied',
-            description = 'You must be a police or K9 officer to use this command.',
+            title = Config.Lang['access_denied'],
+            description = Config.Lang['k9_no_valid_role'],
             type = 'error',
         })
     end
@@ -101,27 +101,32 @@ RegisterNetEvent('police-k9:searchInventory', function(target)
 
         for _, item in pairs(items) do
             local label = getItemLabel(item.name)
-            if label then
-                TriggerClientEvent('ox_lib:notify', k9Officer, {
-                    description = 'K9 found: ' .. label,
-                    type = 'success',
-                })
-                foundItem = true
-                TriggerClientEvent('police-k9:searchIndication', k9Officer, true)
-                break
+            local chance = getItemChance(item.name)
+
+            if label and chance then
+                local randomChance = math.random(1, 100)
+                if randomChance <= chance then
+                    TriggerClientEvent('ox_lib:notify', k9Officer, {
+                        description = Config.Lang['k9_found_contraband'] .. label,
+                        type = 'success',
+                    })
+                    foundItem = true
+                    TriggerClientEvent('police-k9:searchIndication', k9Officer, true)
+                    break
+                end
             end
         end
 
         if not foundItem then
             TriggerClientEvent('ox_lib:notify', k9Officer, {
-                description = 'K9 found nothing.',
+                description = Config.Lang['k9_found_nothing'],
                 type = 'inform',
             })
             TriggerClientEvent('police-k9:searchIndication', k9Officer, false)
         end
     else
         TriggerClientEvent('ox_lib:notify', k9Officer, {
-            description = 'Error fetching inventory.',
+            description = Config.Lang['error_message'],
             type = 'error',
         })
     end
@@ -142,14 +147,25 @@ RegisterNetEvent('police-k9:server:searchVehicle', function(vehiclePlate, vehicl
 
         for _, item in ipairs(gloveboxItems) do
             local label = getItemLabel(item.name)
-            if label then
-                foundItems[label] = true
+            local chance = getItemChance(item.name)
+
+            if label and chance then
+                local randomChance = math.random(1, 100)
+                if randomChance <= chance then
+                    foundItems[label] = true
+                end
             end
         end
+
         for _, item in ipairs(trunkItems) do
             local label = getItemLabel(item.name)
-            if label then
-                foundItems[label] = true
+            local chance = getItemChance(item.name)
+
+            if label and chance then
+                local randomChance = math.random(1, 100)
+                if randomChance <= chance then
+                    foundItems[label] = true
+                end
             end
         end
 
@@ -159,20 +175,20 @@ RegisterNetEvent('police-k9:server:searchVehicle', function(vehiclePlate, vehicl
                 table.insert(foundItemLabels, label)
             end
             TriggerClientEvent('ox_lib:notify', k9Officer, {
-                description = "K9 detected: " .. table.concat(foundItemLabels, ", "),
+                description = Config.Lang['k9_found_contraband'] .. table.concat(foundItemLabels, ", "),
                 type = 'success',
             })
             TriggerClientEvent('police-k9:searchIndication', k9Officer, true)
         else
             TriggerClientEvent('ox_lib:notify', k9Officer, {
-                description = 'K9 found nothing suspicious.',
+                description = Config.Lang['k9_found_nothing'],
                 type = 'inform',
             })
             TriggerClientEvent('police-k9:searchIndication', k9Officer, false)
         end
     else
         TriggerClientEvent('ox_lib:notify', k9Officer, {
-            description = 'Vehicle is too far away to search.',
+            description = Config.Lang['vehicle_too_far'],
             type = 'inform',
         })
     end
@@ -182,6 +198,15 @@ function getItemLabel(itemName)
     for _, item in ipairs(Config.SearchableItems) do
         if item.name == itemName then
             return item.label
+        end
+    end
+    return nil
+end
+
+function getItemChance(itemName)
+    for _, item in ipairs(Config.SearchableItems) do
+        if item.name == itemName then
+            return item.chance
         end
     end
     return nil
